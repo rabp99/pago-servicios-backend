@@ -28,8 +28,7 @@ class PagosTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
-    {
+    public function initialize(array $config) {
         parent::initialize($config);
 
         $this->setTable('pagos');
@@ -38,6 +37,11 @@ class PagosTable extends Table
 
         $this->belongsTo('Servicios', [
             'foreignKey' => 'servicio_id',
+            'joinType' => 'INNER'
+        ]);
+        
+        $this->belongsTo('Programaciones', [
+            'foreignKey' => 'programacion_id',
             'joinType' => 'INNER'
         ]);
     }

@@ -86,9 +86,13 @@ Router::scope('/', function ($routes) {
             'getPendientesPago' => [
                 'action' => 'getPendientesPago',
                 'method' => 'GET'
+            ],
+            'getByTipo/:id' => [
+                'action' => 'getByTipo',
+                'method' => 'GET'
             ]
         ]
-    ]);   
+    ]);
     $routes->resources('programaciones', [
         'map' => [
             'getByServicio/:id' => [
@@ -97,6 +101,8 @@ Router::scope('/', function ($routes) {
             ]
         ]
     ]);
+    $routes->resources('tipos');
+    $routes->resources('pagos');
 });
 
 Plugin::routes();

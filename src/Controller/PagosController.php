@@ -18,12 +18,9 @@ class PagosController extends AppController
      *
      * @return \Cake\Http\Response|void
      */
-    public function index()
-    {
-        $this->paginate = [
-            'contain' => ['Servicios']
-        ];
-        $pagos = $this->paginate($this->Pagos);
+    public function index() {
+        $pagos = $this->Pagos->find()
+            ->contain(['Programaciones' => ['Servicios' => ['Tipos']]]);
 
         $this->set(compact('pagos'));
         $this->set('_serialize', ['pagos']);

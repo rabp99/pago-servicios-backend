@@ -19,7 +19,8 @@ class ServiciosController extends AppController
      * @return \Cake\Http\Response|void
      */
     public function index() {
-        $servicios = $this->Servicios->find();
+        $servicios = $this->Servicios->find()
+            ->contain(['Tipos']);
 
         $this->set(compact('servicios'));
         $this->set('_serialize', ['servicios']);
@@ -55,13 +56,12 @@ class ServiciosController extends AppController
      * @return \Cake\Http\Response|void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
-    {
+    public function view($id = null) {
         $servicio = $this->Servicios->get($id, [
-            'contain' => []
+            'contain' => ['Tipos']
         ]);
 
-        $this->set('servicio', $servicio);
+        $this->set(compact('servicio'));
         $this->set('_serialize', ['servicio']);
     }
 
@@ -130,5 +130,12 @@ class ServiciosController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+    
+    public function getByTipo($tipo_id) {
+        $servicios = $this->Servicios->findByTipoId($tipo_id);
+              
+        $this->set(compact('servicios'));
+        $this->set('_serialize', ['servicios']);
     }
 }

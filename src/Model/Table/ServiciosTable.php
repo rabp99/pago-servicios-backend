@@ -44,6 +44,11 @@ class ServiciosTable extends Table
             'foreignKey' => 'estado_id',
             'joinType' => 'INNER'
         ]);
+        
+        $this->belongsTo('Tipos', [
+            'foreignKey' => 'tipo_id',
+            'joinType' => 'INNER'
+        ]);
     }
 
     /**
