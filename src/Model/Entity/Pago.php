@@ -26,8 +26,6 @@ class Pago extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true,
-        'id' => false,
-        'servicio_id' => false
+        '*' => true
     ];
 }

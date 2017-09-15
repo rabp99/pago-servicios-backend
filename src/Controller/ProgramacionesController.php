@@ -120,4 +120,15 @@ class ProgramacionesController extends AppController
         $this->set(compact('programaciones'));
         $this->set('_serialize', ['programaciones']);
     }
+    
+    public function getByServicioNoPagados($servicio_id) {
+        $programaciones = $this->Programaciones->find()
+            ->where([
+                'servicio_id' => $servicio_id, 
+                'estado_id' => 4
+            ]);
+              
+        $this->set(compact('programaciones'));
+        $this->set('_serialize', ['programaciones']);
+    }
 }

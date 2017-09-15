@@ -28,4 +28,10 @@ class Programacion extends Entity
     protected $_accessible = [
         '*' => true
     ];
+    
+    protected $_virtual = ['descripcion_detallada'];
+    
+    protected function _getDescripcionDetallada() {
+        return 'S/ ' . $this->_properties['monto'] . ' - ' . $this->_properties['fecha']->format('Y-m-d');
+    }
 }

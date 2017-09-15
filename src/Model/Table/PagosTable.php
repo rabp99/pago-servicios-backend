@@ -4,6 +4,7 @@ namespace App\Model\Table;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
 
 /**
@@ -32,8 +33,8 @@ class PagosTable extends Table
         parent::initialize($config);
 
         $this->setTable('pagos');
-        $this->setDisplayField('id');
-        $this->setPrimaryKey(['id', 'servicio_id']);
+        $this->setDisplayField('fecha');
+        $this->setPrimaryKey('id');
 
         $this->belongsTo('Servicios', [
             'foreignKey' => 'servicio_id',
@@ -43,7 +44,7 @@ class PagosTable extends Table
         $this->belongsTo('Programaciones', [
             'foreignKey' => 'programacion_id',
             'joinType' => 'INNER'
-        ]);
+        ])->setProperty('programacion');
     }
 
     /**
@@ -52,8 +53,7 @@ class PagosTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
-    {
+    public function validationDefault(Validator $validator) {
         $validator
             ->integer('id')
             ->allowEmpty('id', 'create');
@@ -62,11 +62,6 @@ class PagosTable extends Table
             ->decimal('monto')
             ->requirePresence('monto', 'create')
             ->notEmpty('monto');
-
-        $validator
-            ->date('fecha')
-            ->requirePresence('fecha', 'create')
-            ->notEmpty('fecha');
 
         return $validator;
     }
@@ -78,10 +73,20 @@ class PagosTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
-    {
+    public function buildRules(RulesChecker $rules) {
         $rules->add($rules->existsIn(['servicio_id'], 'Servicios'));
 
         return $rules;
+    }
+    
+    public function afterSave($event, $entity, $options) {
+        $programacion_id = $entity->programacion->id;
+        $programaciones = TableRegistry::get('Programaciones');
+        
+        $programacion = $programaciones->get($programacion_id);
+        
+        $programacion->estado_id = 3;
+        
+        $programaciones->save($programacion);
     }
 }

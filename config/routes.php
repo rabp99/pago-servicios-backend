@@ -98,11 +98,22 @@ Router::scope('/', function ($routes) {
             'getByServicio/:id' => [
                 'action' => 'getByServicio',
                 'method' => 'GET'
+            ],
+            'getByServicioNoPagados/:id' => [
+                'action' => 'getByServicioNoPagados',
+                'method' => 'GET'
             ]
         ]
     ]);
     $routes->resources('tipos');
-    $routes->resources('pagos');
+    $routes->resources('pagos', [
+        'map' => [
+            'getByDates/:fecha_inicio/:fecha_cierre' => [
+                'action' => 'getByDates',
+                'method' => 'GET'
+            ]
+        ]
+    ]);
 });
 
 Plugin::routes();
