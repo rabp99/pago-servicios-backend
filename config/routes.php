@@ -83,12 +83,12 @@ Router::scope('/', function ($routes) {
     $routes->extensions(['json']);
     $routes->resources('Servicios', [
         'map' => [
-            'getPendientesPago' => [
-                'action' => 'getPendientesPago',
-                'method' => 'GET'
-            ],
             'getByTipo/:id' => [
                 'action' => 'getByTipo',
+                'method' => 'GET'
+            ],
+            'getReport' => [
+                'action' => 'getReport',
                 'method' => 'GET'
             ]
         ]
@@ -101,6 +101,14 @@ Router::scope('/', function ($routes) {
             ],
             'getByServicioNoPagados/:id' => [
                 'action' => 'getByServicioNoPagados',
+                'method' => 'GET'
+            ],
+            'getByDates/:fecha_inicio/:fecha_cierre' => [
+                'action' => 'getByDates',
+                'method' => 'GET'
+            ],
+            'getPendientesPago' => [
+                'action' => 'getPendientesPago',
                 'method' => 'GET'
             ]
         ]

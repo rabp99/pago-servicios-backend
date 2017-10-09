@@ -28,8 +28,7 @@ class ProgramacionesTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
-    {
+    public function initialize(array $config) {
         parent::initialize($config);
 
         $this->setTable('programaciones');
@@ -39,6 +38,11 @@ class ProgramacionesTable extends Table
 
         $this->belongsTo('Servicios', [
             'foreignKey' => 'servicio_id',
+            'joinType' => 'INNER'
+        ]);
+        
+        $this->belongsTo('Estados', [
+            'foreignKey' => 'estado_id',
             'joinType' => 'INNER'
         ]);
     }

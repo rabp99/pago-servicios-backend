@@ -27,29 +27,6 @@ class ServiciosController extends AppController
     }
 
     /**
-     * Index method
-     *
-     * @return \Cake\Http\Response|void
-     */
-    public function getPendientesPago() {
-        $servicios_aux = $this->Servicios->find()
-            ->contain(['Pagos' => function($q) {
-                return $q->where(['MONTH(fecha)' => date('m')]);
-            }])->toArray();
-            
-        $servicios = array();
-        
-        foreach ($servicios_aux as $servicio) {
-            if (sizeof($servicio->pagos) == 0) {
-                $servicios[] = $servicio;
-            }
-        }
-        
-        $this->set(compact('servicios'));
-        $this->set('_serialize', ['servicios']);
-    }
-
-    /**
      * View method
      *
      * @param string|null $id Servicio id.
@@ -135,6 +112,17 @@ class ServiciosController extends AppController
     public function getByTipo($tipo_id) {
         $servicios = $this->Servicios->findByTipoId($tipo_id);
               
+        $this->set(compact('servicios'));
+        $this->set('_serialize', ['servicios']);
+    }
+    
+    public function getReport() {
+        
+        $servicios = $this->Servicios->find()
+            ->contain(['Tipos', 'Programaciones' => function($q) {
+                return $q->where(['estado_id' => 4]);
+            }]);
+        
         $this->set(compact('servicios'));
         $this->set('_serialize', ['servicios']);
     }

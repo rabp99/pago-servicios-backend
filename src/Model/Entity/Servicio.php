@@ -29,4 +29,28 @@ class Servicio extends Entity
     protected $_accessible = [
         '*' => true
     ];
+    
+    protected $_virtual = ['condicion', 'deuda_acumulada'];
+    
+    protected function _getCondicion() {
+        $condicion = 'DEUDA';
+        
+        if (empty($this->_properties['programaciones'])) {
+            $condicion = 'PAGADO';
+        }
+        
+        return $condicion;
+    }
+    
+    protected function _getDeudaAcumulada() {
+        $suma = 0;
+        
+        if (!empty($this->_properties['programaciones'])) {
+            foreach ($this->_properties['programaciones'] as $programacion) {
+                $suma += $programacion->monto;
+            }
+        }
+        
+        return $suma;
+    }
 }

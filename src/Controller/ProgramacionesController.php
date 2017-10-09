@@ -131,4 +131,32 @@ class ProgramacionesController extends AppController
         $this->set(compact('programaciones'));
         $this->set('_serialize', ['programaciones']);
     }
+    
+    public function getByDates() {
+        $fecha_inicio = $this->request->param('fecha_inicio');
+        $fecha_cierre = $this->request->param('fecha_cierre');
+        
+        $programaciones = $this->Programaciones->find()
+            ->contain(['Servicios', 'Estados'])
+            ->where(function($exp) use ($fecha_inicio, $fecha_cierre) {
+                return $exp->between('Programaciones.fecha', $fecha_inicio, $fecha_cierre, 'date');
+            });
+        
+        $this->set(compact('programaciones'));
+        $this->set('_serialize', ['programaciones']);
+    }
+    
+    /**
+     * Get Pendientes Pago method
+     *
+     * @return \Cake\Http\Response|void
+     */
+    public function getPendientesPago() {
+        $programaciones = $this->Programaciones->find()
+            ->where(['Programaciones.estado_id' => 4])
+            ->contain(['Servicios']);
+        
+        $this->set(compact('programaciones'));
+        $this->set('_serialize', ['programaciones']);
+    }
 }
