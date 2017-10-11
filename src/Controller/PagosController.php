@@ -50,7 +50,6 @@ class PagosController extends AppController
     public function add() {
         $pago = $this->Pagos->newEntity();
         $pago->estado_id = 1;
-        $pago->fecha = date('Y-m-d');
         if ($this->request->is('post')) {
             $pago = $this->Pagos->patchEntity($pago, $this->request->getData());
 

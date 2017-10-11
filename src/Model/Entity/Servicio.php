@@ -30,7 +30,7 @@ class Servicio extends Entity
         '*' => true
     ];
     
-    protected $_virtual = ['condicion', 'deuda_acumulada'];
+    protected $_virtual = ['condicion', 'deuda_acumulada', 'descripcion_detallada'];
     
     protected function _getCondicion() {
         $condicion = 'DEUDA';
@@ -41,6 +41,13 @@ class Servicio extends Entity
         
         return $condicion;
     }
+    
+    protected function _getDescripcionDetallada() {
+        $descripcion = $this->_properties['descripcion'];
+        $detalle =  $this->_properties['detalle'];
+        return $descripcion . ' - ' . $detalle;
+    }
+    
     
     protected function _getDeudaAcumulada() {
         $suma = 0;
