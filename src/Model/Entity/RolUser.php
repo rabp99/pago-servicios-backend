@@ -26,8 +26,6 @@ class RolUser extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true,
-        'id' => false,
-        'rol_id' => false
+        '*' => true
     ];
 }
