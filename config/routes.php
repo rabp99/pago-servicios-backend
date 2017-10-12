@@ -122,6 +122,25 @@ Router::scope('/', function ($routes) {
             ]
         ]
     ]);
+    $routes->resources('Controllers');
+    $routes->resources('RolUsers');
+    $routes->resources('Roles');
+    $routes->resources('Users', [
+        'map' => [
+            'getPersonas' => [
+                'action' => 'getPersonas',
+                'method' => 'GET'
+            ],
+            'getAdmin' => [
+                'action' => 'getAdmin',
+                'method' => 'GET'
+            ],
+            'token' => [
+                'action' => 'token',
+                'method' => 'POST'
+            ]
+        ]
+    ]);
 });
 
 Plugin::routes();

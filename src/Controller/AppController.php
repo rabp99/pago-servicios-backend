@@ -37,12 +37,37 @@ class AppController extends Controller
      *
      * @return void
      */
-    public function initialize()
-    {
+    public function initialize() {
         parent::initialize();
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
+        $this->loadComponent('Auth', [
+            'storage' => 'Memory',
+            'authenticate' => [
+                'Form' => [
+                    'scope' => ['Users.Idestado' => 1],
+                    'fields' => [
+                        'username' => 'cPerUsuCodigo',
+                        'password' => 'cPerUsuClave'
+                    ],
+                    'passwordHasher' => [
+                        'className' => 'Md5',
+                    ]
+                ],
+                'ADmad/JwtAuth.Jwt' => [
+                    'parameter' => 'token',
+                    'userModel' => 'Users',
+                    'scope' => ['Users.Idestado' => 1],
+                    'fields' => [
+                        'username' => 'PerCod'
+                    ],
+                    'queryDatasource' => true
+                ]
+            ],
+            'unauthorizedRedirect' => false,
+            'checkAuthIn' => 'Controller.initialize'
+        ]);
 
         /*
          * Enable the following components for recommended CakePHP security settings.
@@ -58,8 +83,7 @@ class AppController extends Controller
      * @param \Cake\Event\Event $event The beforeRender event.
      * @return \Cake\Http\Response|null|void
      */
-    public function beforeRender(Event $event)
-    {
+    public function beforeRender(Event $event) {
         // Note: These defaults are just to get started quickly with development
         // and should not be used in production. You should instead set "_serialize"
         // in each action as required.

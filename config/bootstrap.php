@@ -67,8 +67,17 @@ if (!env('APP_NAME') && file_exists(CONFIG . '.env')) {
  * that changes from configuration that does not. This makes deployment simpler.
  */
 try {
+    Configure::write('CAKEPHP_DEBUG', getenv('CAKEPHP_DEBUG'));
+    Configure::write('prefix_systram', 'systram_tmt');
+    Configure::write('prefix_pago_servicios', 'pago_servicios');
+    
     Configure::config('default', new PhpConfig());
     Configure::load('app', 'default', false);
+    if (!Configure::read('CAKEPHP_DEBUG')) {
+        Configure::write('prefix_systram', 'systram_tmt');
+        Configure::write('prefix_pago_servicios', 'pago_servicios');
+        Configure::load('appserver', 'default', true);
+    }
 } catch (\Exception $e) {
     exit($e->getMessage() . "\n");
 }
@@ -217,6 +226,7 @@ if (Configure::read('debug')) {
 }
 
 Plugin::load('Cors', ['bootstrap' => true, 'routes' => false]);
+Plugin::load('ADmad/JwtAuth');
 
 use Cake\I18n\FrozenTime;
 FrozenTime::setJsonEncodeFormat('yyyy-MM-dd HH:mm:ss');
