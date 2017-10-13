@@ -57,12 +57,7 @@ class PagosTable extends Table
         $validator
             ->integer('id')
             ->allowEmpty('id', 'create');
-
-        $validator
-            ->decimal('monto')
-            ->requirePresence('monto', 'create')
-            ->notEmpty('monto');
-
+        
         return $validator;
     }
 

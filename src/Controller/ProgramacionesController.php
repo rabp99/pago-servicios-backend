@@ -12,6 +12,10 @@ use App\Controller\AppController;
  */
 class ProgramacionesController extends AppController
 {
+    public function initialize() {
+        parent::initialize();
+        $this->Auth->allow(['getPendientesPago']);
+    }
 
     /**
      * Index method

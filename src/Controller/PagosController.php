@@ -57,7 +57,6 @@ class PagosController extends AppController
                 $pago = $this->Pagos->get($pago->id, [
                     'contain' => ['Programaciones' => ['Servicios' => ['Tipos']]]
                 ]);
-
                 $code = 200;
                 $message = 'El oago se ha registrado correctamente';
             } else {
