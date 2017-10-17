@@ -9,6 +9,7 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property int $servicio_id
  * @property float $monto
+ * @property string $nro_documento
  * @property \Cake\I18n\FrozenDate $fecha
  *
  * @property \App\Model\Entity\Servicio $servicio

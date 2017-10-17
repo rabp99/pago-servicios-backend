@@ -60,7 +60,7 @@ class ProgramacionesController extends AppController
         $programacion->fecha = date('Y-m-d');
         if ($this->request->is('post')) {
             $programacion = $this->Programaciones->patchEntity($programacion, $this->request->getData());
-         
+            
             if ($this->Programaciones->save($programacion)) {
                 $code = 200;
                 $message = 'La programación fue guardada correctamente';
