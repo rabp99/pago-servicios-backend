@@ -22,8 +22,7 @@ class ProgramacionesController extends AppController
      *
      * @return \Cake\Http\Response|void
      */
-    public function index()
-    {
+    public function index() {
         $this->paginate = [
             'contain' => ['Servicios']
         ];
@@ -57,7 +56,7 @@ class ProgramacionesController extends AppController
     public function add() {
         $programacion = $this->Programaciones->newEntity();
         $programacion->estado_id = 4;
-        $programacion->fecha = date('Y-m-d');
+        $programacion->fecha_registro = date('Y-m-d');
         if ($this->request->is('post')) {
             $programacion = $this->Programaciones->patchEntity($programacion, $this->request->getData());
             

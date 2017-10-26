@@ -10,7 +10,9 @@ use Cake\ORM\Entity;
  * @property int $servicio_id
  * @property float $monto
  * @property string $nro_documento
- * @property \Cake\I18n\FrozenDate $fecha
+ * @property \Cake\I18n\FrozenDate $fecha_registro
+ * @property \Cake\I18n\FrozenDate $fecha_vencimiento
+ * @property \Cake\I18n\FrozenDate $fecha_pago
  *
  * @property \App\Model\Entity\Servicio $servicio
  */
@@ -33,6 +35,6 @@ class Programacion extends Entity
     protected $_virtual = ['descripcion_detallada'];
     
     protected function _getDescripcionDetallada() {
-        return 'S/ ' . $this->_properties['monto'] . ' - ' . $this->_properties['fecha']->format('Y-m-d');
+        return 'S/ ' . $this->_properties['monto'] . ' - ' . $this->_properties['fecha_vencimiento']->format('Y-m-d');
     }
 }
