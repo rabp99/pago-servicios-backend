@@ -118,7 +118,8 @@ class ProgramacionesController extends AppController
     }
     
     public function getByServicio($servicio_id) {
-        $programaciones = $this->Programaciones->findByServicioId($servicio_id);
+        $programaciones = $this->Programaciones->findByServicioId($servicio_id)
+            ->contain(['Servicios']);
               
         $this->set(compact('programaciones'));
         $this->set('_serialize', ['programaciones']);
