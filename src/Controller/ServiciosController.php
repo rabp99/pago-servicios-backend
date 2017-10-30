@@ -117,11 +117,16 @@ class ServiciosController extends AppController
     }
     
     public function getReport() {
+        $tipo_id = $this->request->getParam('tipo_id');
         
         $servicios = $this->Servicios->find()
             ->contain(['Tipos', 'Programaciones' => function($q) {
                 return $q->where(['estado_id' => 4]);
             }]);
+        
+        if ($tipo_id != 0) {
+            $servicios->where(['tipo_id' => $tipo_id]);
+        }
         
         $this->set(compact('servicios'));
         $this->set('_serialize', ['servicios']);

@@ -35,6 +35,9 @@ class Programacion extends Entity
     protected $_virtual = ['descripcion_detallada'];
     
     protected function _getDescripcionDetallada() {
+        if (!isset($this->_properties['monto'])) {
+            return '';
+        }
         return 'S/ ' . $this->_properties['monto'] . ' - ' . $this->_properties['fecha_vencimiento']->format('Y-m-d');
     }
 }

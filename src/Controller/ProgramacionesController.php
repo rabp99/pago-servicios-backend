@@ -55,7 +55,6 @@ class ProgramacionesController extends AppController
      */
     public function add() {
         $programacion = $this->Programaciones->newEntity();
-        $programacion->estado_id = 4;
         $programacion->fecha_registro = date('Y-m-d');
         if ($this->request->is('post')) {
             $programacion = $this->Programaciones->patchEntity($programacion, $this->request->getData());
@@ -139,11 +138,11 @@ class ProgramacionesController extends AppController
     public function getByDates() {
         $fecha_inicio = $this->request->param('fecha_inicio');
         $fecha_cierre = $this->request->param('fecha_cierre');
-        
+
         $programaciones = $this->Programaciones->find()
             ->contain(['Servicios', 'Estados'])
             ->where(function($exp) use ($fecha_inicio, $fecha_cierre) {
-                return $exp->between('Programaciones.fecha', $fecha_inicio, $fecha_cierre, 'date');
+                return $exp->between('Programaciones.fecha_vencimiento', $fecha_inicio, $fecha_cierre, 'date');
             });
         
         $this->set(compact('programaciones'));
@@ -162,5 +161,23 @@ class ProgramacionesController extends AppController
         
         $this->set(compact('programaciones'));
         $this->set('_serialize', ['programaciones']);
+    }
+    
+    public function cancelarPago() {
+        $programacion = $this->Programaciones->newEntity($this->request->getData());
+        $programacion->fecha_pago = null;
+        $programacion->nro_documento = null;
+        $programacion->estado_id = 4;
+        
+        if ($this->request->is('post')) {
+            if ($this->Programaciones->save($programacion)) {
+                $code = 200;
+                $message = 'El pago fue cancelado correctamente';
+            } else {
+                $message = 'El pago no fue cancelado correctamente';
+            }
+        }
+        $this->set(compact('programacion', 'code', 'message'));
+        $this->set('_serialize', ['programacion', 'code', 'message']);
     }
 }

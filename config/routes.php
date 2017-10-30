@@ -87,7 +87,7 @@ Router::scope('/', function ($routes) {
                 'action' => 'getByTipo',
                 'method' => 'GET'
             ],
-            'getReport' => [
+            'getReport/:tipo_id' => [
                 'action' => 'getReport',
                 'method' => 'GET'
             ]
@@ -110,6 +110,10 @@ Router::scope('/', function ($routes) {
             'getPendientesPago' => [
                 'action' => 'getPendientesPago',
                 'method' => 'GET'
+            ],
+            'cancelarPago' => [
+                'action' => 'cancelarPago',
+                'method' => 'POST'
             ]
         ]
     ]);
