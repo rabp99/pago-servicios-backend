@@ -107,6 +107,10 @@ Router::scope('/', function ($routes) {
                 'action' => 'getByDates',
                 'method' => 'GET'
             ],
+            'getByDatesPagos/:fecha_inicio/:fecha_cierre' => [
+                'action' => 'getByDatesPagos',
+                'method' => 'GET'
+            ],
             'getPendientesPago' => [
                 'action' => 'getPendientesPago',
                 'method' => 'GET'

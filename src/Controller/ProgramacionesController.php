@@ -23,13 +23,47 @@ class ProgramacionesController extends AppController
      * @return \Cake\Http\Response|void
      */
     public function index() {
+        $tipo_id = $this->request->getQuery('tipo_id');
+        $servicio_id = $this->request->getQuery('servicio_id');
+        $estado_id = $this->request->getQuery('estado_id');
+        $text = $this->request->getQuery('text');
+        
         $this->paginate = [
-            'contain' => ['Servicios']
+            'limit' => 10
         ];
-        $programaciones = $this->paginate($this->Programaciones);
+        
+        $query = $this->Programaciones->find()
+            ->contain(['Servicios' => ['Tipos']]);
 
-        $this->set(compact('programaciones'));
-        $this->set('_serialize', ['programaciones']);
+        if ($tipo_id) {
+            $query->where(['Servicios.tipo_id' => $tipo_id]);
+        }
+        
+        if ($servicio_id) {
+            $query->where(['Programaciones.servicio_id' => $servicio_id]);
+        }
+        
+        if ($estado_id) {
+            $query->where(['Programaciones.estado_id' => $estado_id]);
+        }
+        
+        if ($text) {
+            $query->where(['OR' => [
+                'Servicios.descripcion LIKE' => '%' . $text . '%',
+                'Servicios.detalle LIKE' => '%' . $text . '%',
+                'Programaciones.nro_recibo LIKE' => '%' . $text . '%'
+            ]]);
+        }
+        
+        $programaciones = $this->paginate($query);
+        $paginate = $this->request->getParam('paging')['Programaciones'];
+        $pagination = [
+            'totalItems' => $paginate['count'],
+            'itemsPerPage' =>  $paginate['perPage']
+        ];
+        
+        $this->set(compact('programaciones', 'pagination'));
+        $this->set('_serialize', ['programaciones', 'pagination']);
     }
 
     /**
@@ -140,9 +174,25 @@ class ProgramacionesController extends AppController
         $fecha_cierre = $this->request->param('fecha_cierre');
 
         $programaciones = $this->Programaciones->find()
-            ->contain(['Servicios', 'Estados'])
+            ->contain(['Servicios' => ['Tipos'], 'Estados'])
+            ->where(['Programaciones.estado_id' => 4])
             ->where(function($exp) use ($fecha_inicio, $fecha_cierre) {
                 return $exp->between('Programaciones.fecha_vencimiento', $fecha_inicio, $fecha_cierre, 'date');
+            });
+        
+        $this->set(compact('programaciones'));
+        $this->set('_serialize', ['programaciones']);
+    }
+    
+    public function getByDatesPagos() {
+        $fecha_inicio = $this->request->param('fecha_inicio');
+        $fecha_cierre = $this->request->param('fecha_cierre');
+
+        $programaciones = $this->Programaciones->find()
+            ->contain(['Servicios' => ['Tipos'], 'Estados'])
+            ->where(['Programaciones.estado_id' => 3])
+            ->where(function($exp) use ($fecha_inicio, $fecha_cierre) {
+                return $exp->between('Programaciones.fecha_pago', $fecha_inicio, $fecha_cierre, 'date');
             });
         
         $this->set(compact('programaciones'));

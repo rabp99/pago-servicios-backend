@@ -19,11 +19,41 @@ class ServiciosController extends AppController
      * @return \Cake\Http\Response|void
      */
     public function index() {
-        $servicios = $this->Servicios->find()
+        $tipo_id = $this->request->getQuery('tipo_id');
+        $estado_id = $this->request->getQuery('estado_id');
+        $text = $this->request->getQuery('text');
+        
+        $this->paginate = [
+            'limit' => 10
+        ];
+        
+        $query = $this->Servicios->find()
             ->contain(['Tipos']);
 
-        $this->set(compact('servicios'));
-        $this->set('_serialize', ['servicios']);
+        if ($tipo_id) {
+            $query->where(['Servicios.tipo_id' => $tipo_id]);
+        }
+        
+        if ($estado_id) {
+            $query->where(['Servicios.estado_id' => $estado_id]);
+        }
+        
+        if ($text) {
+            $query->where(['OR' => [
+                'Servicios.descripcion LIKE' => '%' . $text . '%',
+                'Servicios.detalle LIKE' => '%' . $text . '%'
+            ]]);
+        }
+        
+        $servicios = $this->paginate($query);
+        $paginate = $this->request->getParam('paging')['Servicios'];
+        $pagination = [
+            'totalItems' => $paginate['count'],
+            'itemsPerPage' =>  $paginate['perPage']
+        ];
+        
+        $this->set(compact('servicios', 'pagination'));
+        $this->set('_serialize', ['servicios', 'pagination']);
     }
 
     /**
