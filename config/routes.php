@@ -118,6 +118,10 @@ Router::scope('/', function ($routes) {
             'cancelarPago' => [
                 'action' => 'cancelarPago',
                 'method' => 'POST'
+            ],
+            'pagarMany' => [
+                'action' => 'pagarMany',
+                'method' => 'POST'
             ]
         ]
     ]);

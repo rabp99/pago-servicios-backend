@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Datasource\ConnectionManager;
 
 /**
  * Programaciones Controller
@@ -27,9 +28,10 @@ class ProgramacionesController extends AppController
         $servicio_id = $this->request->getQuery('servicio_id');
         $estado_id = $this->request->getQuery('estado_id');
         $text = $this->request->getQuery('text');
+        $items_per_page = $this->request->getQuery('items_per_page');
         
         $this->paginate = [
-            'limit' => 10
+            'limit' => $items_per_page
         ];
         
         $query = $this->Programaciones->find()
@@ -75,7 +77,7 @@ class ProgramacionesController extends AppController
      */
     public function view($id = null) {
         $programacion = $this->Programaciones->get($id, [
-            'contain' => ['Servicios']
+            'contain' => ['Servicios' => ['Tipos']]
         ]);
 
         $this->set(compact('programacion'));
@@ -229,5 +231,35 @@ class ProgramacionesController extends AppController
         }
         $this->set(compact('programacion', 'code', 'message'));
         $this->set('_serialize', ['programacion', 'code', 'message']);
+    }
+    
+    public function pagarMany() {
+        if ($this->request->is('post')) {
+            $programaciones_id = $this->request->getData('programaciones');
+            $fecha_pago = $this->request->getData('fecha_pago');
+            $nro_documento = $this->request->getData('nro_documento');
+
+            $conn = ConnectionManager::get('default');
+            $conn->begin();
+
+            foreach ($programaciones_id as $programacion_id) {
+                $programacion = $this->Programaciones->get($programacion_id);
+                $programacion->fecha_pago = $fecha_pago;
+                $programacion->nro_documento = $nro_documento;
+                $programacion->estado_id = 3;
+                
+                if (!$this->Programaciones->save($programacion)) {
+                    $conn->rollback();
+                    $message = 'Las programaciones no fueron pagadas correctamente';
+                    break;
+                }
+            }
+            
+            $code = 200;
+            $message = 'Las programaciones fueron pagadas correctamente';
+            $conn->commit();
+        }
+        $this->set(compact('programaciones', 'code', 'message'));
+        $this->set('_serialize', ['programaciones', 'code', 'message']);
     }
 }
