@@ -90,6 +90,10 @@ Router::scope('/', function ($routes) {
             'getReport/:tipo_id' => [
                 'action' => 'getReport',
                 'method' => 'GET'
+            ],
+            'search/:texto' => [
+                'action' => 'search',
+                'method' => 'GET'
             ]
         ]
     ]);

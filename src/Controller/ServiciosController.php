@@ -161,4 +161,19 @@ class ServiciosController extends AppController
         $this->set(compact('servicios'));
         $this->set('_serialize', ['servicios']);
     }
+    
+    public function search($texto = null) {
+        $texto = $this->request->getParam('texto');
+
+        $servicio = $this->Servicios->find()
+            ->contain(['Tipos'])
+            ->where(['OR' => [
+                'Servicios.descripcion' => $texto,
+                'Servicios.detalle' => $texto
+            ]])
+            ->first();
+        
+        $this->set(compact('servicio'));
+        $this->set('_serialize', ['servicio']);
+    }
 }
