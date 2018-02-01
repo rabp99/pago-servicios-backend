@@ -22,9 +22,10 @@ class ServiciosController extends AppController
         $tipo_id = $this->request->getQuery('tipo_id');
         $estado_id = $this->request->getQuery('estado_id');
         $text = $this->request->getQuery('text');
+        $items_per_page = $this->request->getQuery('items_per_page');
         
         $this->paginate = [
-            'limit' => 10
+            'limit' => $items_per_page
         ];
         
         $query = $this->Servicios->find()
@@ -175,5 +176,20 @@ class ServiciosController extends AppController
         
         $this->set(compact('servicio'));
         $this->set('_serialize', ['servicio']);
+    }
+    
+    public function searchMany($search = null) {
+        $servicio = $this->request->getParam('search');
+        $servicios = $this->Servicios->find()
+            ->where([
+                'OR' => [
+                    'Servicios.descripcion LIKE' => '%' . $servicio . '%',
+                    'Servicios.detalle LIKE' => '%' . $servicio . '%'
+                ],
+                'Servicios.estado_id' => 1
+            ]);
+        
+        $this->set(compact('servicios'));
+        $this->set('_serialize', ['servicios']);
     }
 }

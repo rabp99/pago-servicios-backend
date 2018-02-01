@@ -24,10 +24,8 @@ class ProgramacionesController extends AppController
      * @return \Cake\Http\Response|void
      */
     public function index() {
-        $tipo_id = $this->request->getQuery('tipo_id');
         $servicio_id = $this->request->getQuery('servicio_id');
         $estado_id = $this->request->getQuery('estado_id');
-        $text = $this->request->getQuery('text');
         $items_per_page = $this->request->getQuery('items_per_page');
         
         $this->paginate = [
@@ -37,24 +35,12 @@ class ProgramacionesController extends AppController
         $query = $this->Programaciones->find()
             ->contain(['Servicios' => ['Tipos']]);
 
-        if ($tipo_id) {
-            $query->where(['Servicios.tipo_id' => $tipo_id]);
-        }
-        
         if ($servicio_id) {
             $query->where(['Programaciones.servicio_id' => $servicio_id]);
         }
         
         if ($estado_id) {
             $query->where(['Programaciones.estado_id' => $estado_id]);
-        }
-        
-        if ($text) {
-            $query->where(['OR' => [
-                'Servicios.descripcion LIKE' => '%' . $text . '%',
-                'Servicios.detalle LIKE' => '%' . $text . '%',
-                'Programaciones.nro_recibo LIKE' => '%' . $text . '%'
-            ]]);
         }
         
         $programaciones = $this->paginate($query);

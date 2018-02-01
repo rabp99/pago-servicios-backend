@@ -94,6 +94,10 @@ Router::scope('/', function ($routes) {
             'search/:texto' => [
                 'action' => 'search',
                 'method' => 'GET'
+            ],
+            'searchMany/:search' => [
+                'action' => 'searchMany',
+                'method' => 'GET'
             ]
         ]
     ]);
