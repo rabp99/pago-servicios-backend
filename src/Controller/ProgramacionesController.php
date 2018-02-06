@@ -248,4 +248,31 @@ class ProgramacionesController extends AppController
         $this->set(compact('programaciones', 'code', 'message'));
         $this->set('_serialize', ['programaciones', 'code', 'message']);
     }
+    
+    /**
+     * Add method
+     *
+     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
+     */
+    public function saveMany() {
+        $programaciones = $this->Programaciones->newEntities($this->request->getData('programaciones'));
+        if ($this->request->is('post')) {
+            $conn = ConnectionManager::get('default');
+            $conn->begin();
+            foreach ($programaciones as $programacion) {
+                $programacion->fecha_registro = date('Y-m-d');
+                if (!$this->Programaciones->save($programacion)) {
+                    $conn->rollback();
+                    $message = 'Las programaciones no fueron guardadas correctamente';
+                    break;
+                }
+            }
+            
+            $code = 200;
+            $message = 'Las programaciones fueron guardadas correctamente';
+            $conn->commit();
+        }
+        $this->set(compact('programaciones', 'code', 'message'));
+        $this->set('_serialize', ['programaciones', 'code', 'message']);
+    }
 }

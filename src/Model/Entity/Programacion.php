@@ -38,6 +38,9 @@ class Programacion extends Entity
         if (!isset($this->_properties['monto'])) {
             return '';
         }
+        if (!isset($this->_properties['fecha_vencimiento'])) {
+            return '';
+        }
         return 'S/ ' . $this->_properties['monto'] . ' - ' . $this->_properties['fecha_vencimiento']->format('Y-m-d');
     }
 }

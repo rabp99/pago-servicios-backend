@@ -130,6 +130,10 @@ Router::scope('/', function ($routes) {
             'pagarMany' => [
                 'action' => 'pagarMany',
                 'method' => 'POST'
+            ],
+            'saveMany' => [
+                'action' => 'saveMany',
+                'method' => 'POST'
             ]
         ]
     ]);
