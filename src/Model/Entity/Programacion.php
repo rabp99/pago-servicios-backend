@@ -32,7 +32,7 @@ class Programacion extends Entity
         '*' => true
     ];
     
-    protected $_virtual = ['descripcion_detallada'];
+    protected $_virtual = ['descripcion_detallada', 'fecha_limite'];
     
     protected function _getDescripcionDetallada() {
         if (!isset($this->_properties['monto'])) {
@@ -42,5 +42,12 @@ class Programacion extends Entity
             return '';
         }
         return 'S/ ' . $this->_properties['monto'] . ' - ' . $this->_properties['fecha_vencimiento']->format('Y-m-d');
+    }
+    
+    protected function _getFechaLimite() {
+        if (!isset($this->_properties['fecha_vencimiento'])) {
+            return '';
+        }
+        return $this->_properties['fecha_vencimiento']->modify('-' . $this->_properties['dias_mensaje'] . ' days');
     }
 }

@@ -15,7 +15,7 @@ class ProgramacionesController extends AppController
 {
     public function initialize() {
         parent::initialize();
-        $this->Auth->allow(['getPendientesPago']);
+        $this->Auth->allow(['getPendientesPago', 'showAlerts']);
     }
 
     /**
@@ -274,5 +274,22 @@ class ProgramacionesController extends AppController
         }
         $this->set(compact('programaciones', 'code', 'message'));
         $this->set('_serialize', ['programaciones', 'code', 'message']);
+    }
+    
+    public function showAlerts() {
+        $programaciones = $this->Programaciones->find()
+            ->where(['Programaciones.estado_id' => 4])
+            ->contain(['Servicios']);
+
+        foreach ($programaciones as $programacion) {
+            if ($programacion->fecha_limite->format('Y-m-d') <= date('Y-m-d')) {
+                exec('echo Servicio: ' . utf8_decode($programacion->servicio->descripcion) . ' > tmp' . $programacion->id . '.txt');
+                exec('echo Monto: ' . $programacion->monto . ' >> tmp' . $programacion->id . '.txt');
+                exec('echo Fecha de Vencimiento: ' . $programacion->fecha_vencimiento->format('Y-m-d') . ' >> tmp' . $programacion->id . '.txt');
+
+                exec('msg /SERVER:172.20.11.60 tmtrbocanegra <tmp' . $programacion->id . '.txt');
+                exec('del tmp' . $programacion->id . '.txt');
+            }
+        }
     }
 }
