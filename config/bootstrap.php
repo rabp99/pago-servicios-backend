@@ -73,9 +73,7 @@ try {
     
     Configure::config('default', new PhpConfig());
     Configure::load('app', 'default', false);
-    if (!Configure::read('CAKEPHP_DEBUG')) {
-        Configure::write('prefix_systram', 'systram_tmt');
-        Configure::write('prefix_pago_servicios', 'pago_servicios');
+    if (Configure::read('CAKEPHP_DEBUG') == 2) {
         Configure::load('appserver', 'default', true);
     }
 } catch (\Exception $e) {
