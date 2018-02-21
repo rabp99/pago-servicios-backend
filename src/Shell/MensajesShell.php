@@ -24,24 +24,22 @@ class MensajesShell extends Shell
         $this->out('Usa la funcion send + local/servidor');
     }
     
-    public function send() {
+    public function send($ip, $username) {
         $programaciones = $this->Programaciones->find()
             ->where(['Programaciones.estado_id' => 4])
             ->contain(['Servicios']);
         
         foreach ($programaciones as $programacion) {
             if ($programacion->fecha_limite->format('Y-m-d') <= date('Y-m-d')) {
-                exec('echo Advertencia  > tmp' . $programacion->id . '.txt');
-                exec('echo Servicio: ' . utf8_decode($programacion->servicio->descripcion) . ' > tmp' . $programacion->id . '.txt');
-                exec('echo Detalle de Servicio: ' . $programacion->servicio->detalle . ' >> tmp' . $programacion->id . '.txt');
-                exec('echo Monto: ' . $programacion->monto . ' >> tmp' . $programacion->id . '.txt');
-                exec('echo Fecha de Vencimiento: ' . $programacion->fecha_vencimiento->format('Y-m-d') . ' >> tmp' . $programacion->id . '.txt');
+                exec('echo Advertencia  > tmp-' . $programacion->id . '-' . $username . '.txt');
+                exec('echo Servicio: ' . utf8_decode($programacion->servicio->descripcion) . ' >> tmp-' . $programacion->id . '-' . $username . '.txt');
+                exec('echo Detalle de Servicio: ' . $programacion->servicio->detalle . ' >> tmp-' . $programacion->id . '-' . $username . '.txt');
+                exec('echo Monto: ' . $programacion->monto . ' >> tmp-' . $programacion->id . '-' . $username . '.txt');
+                exec('echo Fecha de Vencimiento: ' . $programacion->fecha_vencimiento->format('Y-m-d') . ' >> tmp-' . $programacion->id . '-' . $username . '.txt');
+                exec('echo Revise el Sistema de Pago de Servicios  >> tmp-' . $programacion->id . '-' . $username . '.txt');
 
-                exec('msg /SERVER:172.20.11.60 tmtrbocanegra <tmp' . $programacion->id . '.txt');
-                exec('msg /SERVER:172.20.11.63 kronos <tmp' . $programacion->id . '.txt');
-                exec('msg /SERVER:172.20.11.56 tmtkydrogo <tmp' . $programacion->id . '.txt');
-                exec('msg /SERVER:172.20.11.50 tmtzventura <tmp' . $programacion->id . '.txt');
-                exec('del tmp' . $programacion->id . '.txt');
+                exec('msg /SERVER:' . $ip. ' ' . $username . ' <tmp-' . $programacion->id . '-' . $username . '.txt');
+                exec('del tmp-' . $programacion->id . '-' . $username . '.txt');
             }
         }
     }
