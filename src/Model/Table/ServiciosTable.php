@@ -36,7 +36,7 @@ class ServiciosTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
-        $this->hasMany('Programaciones', [
+        $this->hasMany('Recibos', [
             'foreignKey' => 'servicio_id'
         ]);
         

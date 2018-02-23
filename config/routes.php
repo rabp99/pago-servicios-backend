@@ -81,7 +81,7 @@ Router::scope('/', function (RouteBuilder $routes) {
  */
 Router::scope('/', function ($routes) {
     $routes->extensions(['json']);
-    $routes->resources('Servicios', [
+    $routes->resources('servicios', [
         'map' => [
             'getByTipo/:id' => [
                 'action' => 'getByTipo',
@@ -101,7 +101,7 @@ Router::scope('/', function ($routes) {
             ]
         ]
     ]);
-    $routes->resources('programaciones', [
+    $routes->resources('recibos', [
         'map' => [
             'getByServicio/:id' => [
                 'action' => 'getByServicio',

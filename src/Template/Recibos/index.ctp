@@ -1,19 +1,19 @@
 <?php
 /**
   * @var \App\View\AppView $this
-  * @var \App\Model\Entity\Programacione[]|\Cake\Collection\CollectionInterface $programaciones
+  * @var \App\Model\Entity\Reciboe[]|\Cake\Collection\CollectionInterface $recibos
   */
 ?>
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('New Programacione'), ['action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('New Reciboe'), ['action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Servicios'), ['controller' => 'Servicios', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Servicio'), ['controller' => 'Servicios', 'action' => 'add']) ?></li>
     </ul>
 </nav>
-<div class="programaciones index large-9 medium-8 columns content">
-    <h3><?= __('Programaciones') ?></h3>
+<div class="recibos index large-9 medium-8 columns content">
+    <h3><?= __('Recibos') ?></h3>
     <table cellpadding="0" cellspacing="0">
         <thead>
             <tr>
@@ -25,7 +25,7 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($programaciones as $programacione): ?>
+            <?php foreach ($recibos as $programacione): ?>
             <tr>
                 <td><?= $this->Number->format($programacione->id) ?></td>
                 <td><?= $programacione->has('servicio') ? $this->Html->link($programacione->servicio->id, ['controller' => 'Servicios', 'action' => 'view', $programacione->servicio->id]) : '' ?></td>

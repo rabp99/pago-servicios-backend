@@ -7,19 +7,19 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * Programaciones Model
+ * Recibos Model
  *
  * @property \App\Model\Table\ServiciosTable|\Cake\ORM\Association\BelongsTo $Servicios
  *
- * @method \App\Model\Entity\Programacione get($primaryKey, $options = [])
- * @method \App\Model\Entity\Programacione newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\Programacione[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Programacione|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Programacione patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Programacione[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\Programacione findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Reciboe get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Reciboe newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\Reciboe[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Reciboe|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Reciboe patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Reciboe[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Reciboe findOrCreate($search, callable $callback = null, $options = [])
  */
-class ProgramacionesTable extends Table
+class RecibosTable extends Table
 {
 
     /**
@@ -31,8 +31,8 @@ class ProgramacionesTable extends Table
     public function initialize(array $config) {
         parent::initialize($config);
 
-        $this->setTable('programaciones');
-        $this->setEntityClass('Programacion');
+        $this->setTable('recibos');
+        $this->setEntityClass('Recibo');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 

@@ -4,7 +4,7 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Programacione Entity
+ * Reciboe Entity
  *
  * @property int $id
  * @property int $servicio_id
@@ -16,7 +16,7 @@ use Cake\ORM\Entity;
  *
  * @property \App\Model\Entity\Servicio $servicio
  */
-class Programacion extends Entity
+class Recibo extends Entity
 {
 
     /**

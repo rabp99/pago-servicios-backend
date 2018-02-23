@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\ProgramacionesTable;
+use App\Model\Table\RecibosTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\ProgramacionesTable Test Case
+ * App\Model\Table\RecibosTable Test Case
  */
-class ProgramacionesTableTest extends TestCase
+class RecibosTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\ProgramacionesTable
+     * @var \App\Model\Table\RecibosTable
      */
-    public $Programaciones;
+    public $Recibos;
 
     /**
      * Fixtures
@@ -24,7 +24,7 @@ class ProgramacionesTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.programaciones',
+        'app.recibos',
         'app.servicios',
         'app.pagos',
         'app.estados'
@@ -38,8 +38,8 @@ class ProgramacionesTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Programaciones') ? [] : ['className' => ProgramacionesTable::class];
-        $this->Programaciones = TableRegistry::get('Programaciones', $config);
+        $config = TableRegistry::exists('Recibos') ? [] : ['className' => RecibosTable::class];
+        $this->Recibos = TableRegistry::get('Recibos', $config);
     }
 
     /**
@@ -49,7 +49,7 @@ class ProgramacionesTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Programaciones);
+        unset($this->Recibos);
 
         parent::tearDown();
     }

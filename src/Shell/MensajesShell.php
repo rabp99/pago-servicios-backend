@@ -12,7 +12,7 @@ class MensajesShell extends Shell
 
     public function initialize() {
         parent::initialize();
-        $this->loadModel('Programaciones');
+        $this->loadModel('Recibos');
     }
 
     /**
@@ -25,11 +25,11 @@ class MensajesShell extends Shell
     }
     
     public function send($ip, $username) {
-        $programaciones = $this->Programaciones->find()
-            ->where(['Programaciones.estado_id' => 4])
+        $recibos = $this->Recibos->find()
+            ->where(['Recibos.estado_id' => 4])
             ->contain(['Servicios']);
         
-        foreach ($programaciones as $programacion) {
+        foreach ($recibos as $programacion) {
             if ($programacion->fecha_limite->format('Y-m-d') <= date('Y-m-d')) {
                 exec('echo Advertencia  > tmp-' . $programacion->id . '-' . $username . '.txt');
                 exec('echo Servicio: ' . utf8_decode($programacion->servicio->descripcion) . ' >> tmp-' . $programacion->id . '-' . $username . '.txt');

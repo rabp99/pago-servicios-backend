@@ -20,7 +20,7 @@ class PagosController extends AppController
      */
     public function index() {
         $pagos = $this->Pagos->find()
-            ->contain(['Programaciones' => ['Servicios' => ['Tipos']]]);
+            ->contain(['Recibos' => ['Servicios' => ['Tipos']]]);
 
         $this->set(compact('pagos'));
         $this->set('_serialize', ['pagos']);
@@ -55,7 +55,7 @@ class PagosController extends AppController
 
             if ($this->Pagos->save($pago)) {
                 $pago = $this->Pagos->get($pago->id, [
-                    'contain' => ['Programaciones' => ['Servicios' => ['Tipos']]]
+                    'contain' => ['Recibos' => ['Servicios' => ['Tipos']]]
                 ]);
                 $code = 200;
                 $message = 'El oago se ha registrado correctamente';
@@ -118,7 +118,7 @@ class PagosController extends AppController
         $fecha_cierre = $this->request->param('fecha_cierre');
         
         $pagos = $this->Pagos->find()
-            ->contain(['Programaciones' => ['Servicios' => ['Tipos']]])
+            ->contain(['Recibos' => ['Servicios' => ['Tipos']]])
             ->where(function($exp) use ($fecha_inicio, $fecha_cierre) {
                 return $exp->between('Pagos.fecha', $fecha_inicio, $fecha_cierre, 'date');
             });

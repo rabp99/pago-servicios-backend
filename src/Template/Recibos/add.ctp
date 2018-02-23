@@ -6,21 +6,15 @@
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Form->postLink(
-                __('Delete'),
-                ['action' => 'delete', $programacione->id],
-                ['confirm' => __('Are you sure you want to delete # {0}?', $programacione->id)]
-            )
-        ?></li>
-        <li><?= $this->Html->link(__('List Programaciones'), ['action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('List Recibos'), ['action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('List Servicios'), ['controller' => 'Servicios', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Servicio'), ['controller' => 'Servicios', 'action' => 'add']) ?></li>
     </ul>
 </nav>
-<div class="programaciones form large-9 medium-8 columns content">
+<div class="recibos form large-9 medium-8 columns content">
     <?= $this->Form->create($programacione) ?>
     <fieldset>
-        <legend><?= __('Edit Programacione') ?></legend>
+        <legend><?= __('Add Reciboe') ?></legend>
         <?php
             echo $this->Form->control('monto');
             echo $this->Form->control('fecha');

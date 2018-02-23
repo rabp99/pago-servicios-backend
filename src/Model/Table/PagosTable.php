@@ -41,7 +41,7 @@ class PagosTable extends Table
             'joinType' => 'INNER'
         ]);
         
-        $this->belongsTo('Programaciones', [
+        $this->belongsTo('Recibos', [
             'foreignKey' => 'programacion_id',
             'joinType' => 'INNER'
         ])->setProperty('programacion');
@@ -76,12 +76,12 @@ class PagosTable extends Table
     
     public function afterSave($event, $entity, $options) {
         $programacion_id = $entity->programacion->id;
-        $programaciones = TableRegistry::get('Programaciones');
+        $recibos = TableRegistry::get('Recibos');
         
-        $programacion = $programaciones->get($programacion_id);
+        $programacion = $recibos->get($programacion_id);
         
         $programacion->estado_id = 3;
         
-        $programaciones->save($programacion);
+        $recibos->save($programacion);
     }
 }

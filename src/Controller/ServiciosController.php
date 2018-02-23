@@ -151,7 +151,7 @@ class ServiciosController extends AppController
         $tipo_id = $this->request->getParam('tipo_id');
         
         $servicios = $this->Servicios->find()
-            ->contain(['Tipos', 'Programaciones' => function($q) {
+            ->contain(['Tipos', 'Recibos' => function($q) {
                 return $q->where(['estado_id' => 4]);
             }]);
         

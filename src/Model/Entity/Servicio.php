@@ -35,7 +35,7 @@ class Servicio extends Entity
     protected function _getCondicion() {
         $condicion = 'DEUDA';
         
-        if (empty($this->_properties['programaciones'])) {
+        if (empty($this->_properties['recibos'])) {
             $condicion = 'PAGADO';
         }
         
@@ -52,8 +52,8 @@ class Servicio extends Entity
     protected function _getDeudaAcumulada() {
         $suma = 0;
         
-        if (!empty($this->_properties['programaciones'])) {
-            foreach ($this->_properties['programaciones'] as $programacion) {
+        if (!empty($this->_properties['recibos'])) {
+            foreach ($this->_properties['recibos'] as $programacion) {
                 $suma += $programacion->monto;
             }
         }

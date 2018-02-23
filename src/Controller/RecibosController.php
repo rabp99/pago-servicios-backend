@@ -5,13 +5,13 @@ use App\Controller\AppController;
 use Cake\Datasource\ConnectionManager;
 
 /**
- * Programaciones Controller
+ * Recibos Controller
  *
- * @property \App\Model\Table\ProgramacionesTable $Programaciones
+ * @property \App\Model\Table\RecibosTable $Recibos
  *
- * @method \App\Model\Entity\Programacione[] paginate($object = null, array $settings = [])
+ * @method \App\Model\Entity\Reciboe[] paginate($object = null, array $settings = [])
  */
-class ProgramacionesController extends AppController
+class RecibosController extends AppController
 {
     public function initialize() {
         parent::initialize();
@@ -32,37 +32,37 @@ class ProgramacionesController extends AppController
             'limit' => $items_per_page
         ];
         
-        $query = $this->Programaciones->find()
+        $query = $this->Recibos->find()
             ->contain(['Servicios' => ['Tipos']]);
 
         if ($servicio_id) {
-            $query->where(['Programaciones.servicio_id' => $servicio_id]);
+            $query->where(['Recibos.servicio_id' => $servicio_id]);
         }
         
         if ($estado_id) {
-            $query->where(['Programaciones.estado_id' => $estado_id]);
+            $query->where(['Recibos.estado_id' => $estado_id]);
         }
         
-        $programaciones = $this->paginate($query);
-        $paginate = $this->request->getParam('paging')['Programaciones'];
+        $recibos = $this->paginate($query);
+        $paginate = $this->request->getParam('paging')['Recibos'];
         $pagination = [
             'totalItems' => $paginate['count'],
             'itemsPerPage' =>  $paginate['perPage']
         ];
         
-        $this->set(compact('programaciones', 'pagination'));
-        $this->set('_serialize', ['programaciones', 'pagination']);
+        $this->set(compact('recibos', 'pagination'));
+        $this->set('_serialize', ['recibos', 'pagination']);
     }
 
     /**
      * View method
      *
-     * @param string|null $id Programacione id.
+     * @param string|null $id Reciboe id.
      * @return \Cake\Http\Response|void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null) {
-        $programacion = $this->Programaciones->get($id, [
+        $programacion = $this->Recibos->get($id, [
             'contain' => ['Servicios' => ['Tipos']]
         ]);
 
@@ -76,16 +76,16 @@ class ProgramacionesController extends AppController
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
     public function add() {
-        $programacion = $this->Programaciones->newEntity();
+        $programacion = $this->Recibos->newEntity();
         $programacion->fecha_registro = date('Y-m-d');
         if ($this->request->is('post')) {
-            $programacion = $this->Programaciones->patchEntity($programacion, $this->request->getData());
+            $programacion = $this->Recibos->patchEntity($programacion, $this->request->getData());
             
-            if ($this->Programaciones->save($programacion)) {
+            if ($this->Recibos->save($programacion)) {
                 $code = 200;
-                $message = 'La programación fue guardada correctamente';
+                $message = 'La recibo fue guardada correctamente';
             } else {
-                $message = 'El programación no fue guardada correctamente';
+                $message = 'El recibo no fue guardada correctamente';
             }
         }
         $this->set(compact('programacion', 'code', 'message'));
@@ -95,25 +95,25 @@ class ProgramacionesController extends AppController
     /**
      * Edit method
      *
-     * @param string|null $id Programacione id.
+     * @param string|null $id Reciboe id.
      * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function edit($id = null)
     {
-        $programacione = $this->Programaciones->get($id, [
+        $programacione = $this->Recibos->get($id, [
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $programacione = $this->Programaciones->patchEntity($programacione, $this->request->getData());
-            if ($this->Programaciones->save($programacione)) {
+            $programacione = $this->Recibos->patchEntity($programacione, $this->request->getData());
+            if ($this->Recibos->save($programacione)) {
                 $this->Flash->success(__('The programacione has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('The programacione could not be saved. Please, try again.'));
         }
-        $servicios = $this->Programaciones->Servicios->find('list', ['limit' => 200]);
+        $servicios = $this->Recibos->Servicios->find('list', ['limit' => 200]);
         $this->set(compact('programacione', 'servicios'));
         $this->set('_serialize', ['programacione']);
     }
@@ -121,15 +121,15 @@ class ProgramacionesController extends AppController
     /**
      * Delete method
      *
-     * @param string|null $id Programacione id.
+     * @param string|null $id Reciboe id.
      * @return \Cake\Http\Response|null Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $programacione = $this->Programaciones->get($id);
-        if ($this->Programaciones->delete($programacione)) {
+        $programacione = $this->Recibos->get($id);
+        if ($this->Recibos->delete($programacione)) {
             $this->Flash->success(__('The programacione has been deleted.'));
         } else {
             $this->Flash->error(__('The programacione could not be deleted. Please, try again.'));
@@ -139,52 +139,52 @@ class ProgramacionesController extends AppController
     }
     
     public function getByServicio($servicio_id) {
-        $programaciones = $this->Programaciones->findByServicioId($servicio_id)
+        $recibos = $this->Recibos->findByServicioId($servicio_id)
             ->contain(['Servicios']);
               
-        $this->set(compact('programaciones'));
-        $this->set('_serialize', ['programaciones']);
+        $this->set(compact('recibos'));
+        $this->set('_serialize', ['recibos']);
     }
     
     public function getByServicioNoPagados($servicio_id) {
-        $programaciones = $this->Programaciones->find()
+        $recibos = $this->Recibos->find()
             ->where([
                 'servicio_id' => $servicio_id, 
                 'estado_id' => 4
             ]);
               
-        $this->set(compact('programaciones'));
-        $this->set('_serialize', ['programaciones']);
+        $this->set(compact('recibos'));
+        $this->set('_serialize', ['recibos']);
     }
     
     public function getByDates() {
         $fecha_inicio = $this->request->param('fecha_inicio');
         $fecha_cierre = $this->request->param('fecha_cierre');
 
-        $programaciones = $this->Programaciones->find()
+        $recibos = $this->Recibos->find()
             ->contain(['Servicios' => ['Tipos'], 'Estados'])
-            ->where(['Programaciones.estado_id' => 4])
+            ->where(['Recibos.estado_id' => 4])
             ->where(function($exp) use ($fecha_inicio, $fecha_cierre) {
-                return $exp->between('Programaciones.fecha_vencimiento', $fecha_inicio, $fecha_cierre, 'date');
+                return $exp->between('Recibos.fecha_vencimiento', $fecha_inicio, $fecha_cierre, 'date');
             });
         
-        $this->set(compact('programaciones'));
-        $this->set('_serialize', ['programaciones']);
+        $this->set(compact('recibos'));
+        $this->set('_serialize', ['recibos']);
     }
     
     public function getByDatesPagos() {
         $fecha_inicio = $this->request->param('fecha_inicio');
         $fecha_cierre = $this->request->param('fecha_cierre');
 
-        $programaciones = $this->Programaciones->find()
+        $recibos = $this->Recibos->find()
             ->contain(['Servicios' => ['Tipos'], 'Estados'])
-            ->where(['Programaciones.estado_id' => 3])
+            ->where(['Recibos.estado_id' => 3])
             ->where(function($exp) use ($fecha_inicio, $fecha_cierre) {
-                return $exp->between('Programaciones.fecha_pago', $fecha_inicio, $fecha_cierre, 'date');
+                return $exp->between('Recibos.fecha_pago', $fecha_inicio, $fecha_cierre, 'date');
             });
         
-        $this->set(compact('programaciones'));
-        $this->set('_serialize', ['programaciones']);
+        $this->set(compact('recibos'));
+        $this->set('_serialize', ['recibos']);
     }
     
     /**
@@ -193,22 +193,22 @@ class ProgramacionesController extends AppController
      * @return \Cake\Http\Response|void
      */
     public function getPendientesPago() {
-        $programaciones = $this->Programaciones->find()
-            ->where(['Programaciones.estado_id' => 4])
+        $recibos = $this->Recibos->find()
+            ->where(['Recibos.estado_id' => 4])
             ->contain(['Servicios']);
         
-        $this->set(compact('programaciones'));
-        $this->set('_serialize', ['programaciones']);
+        $this->set(compact('recibos'));
+        $this->set('_serialize', ['recibos']);
     }
     
     public function cancelarPago() {
-        $programacion = $this->Programaciones->newEntity($this->request->getData());
+        $programacion = $this->Recibos->newEntity($this->request->getData());
         $programacion->fecha_pago = null;
         $programacion->nro_documento = null;
         $programacion->estado_id = 4;
         
         if ($this->request->is('post')) {
-            if ($this->Programaciones->save($programacion)) {
+            if ($this->Recibos->save($programacion)) {
                 $code = 200;
                 $message = 'El pago fue cancelado correctamente';
             } else {
@@ -221,32 +221,32 @@ class ProgramacionesController extends AppController
     
     public function pagarMany() {
         if ($this->request->is('post')) {
-            $programaciones_id = $this->request->getData('programaciones');
+            $recibos_id = $this->request->getData('recibos');
             $fecha_pago = $this->request->getData('fecha_pago');
             $nro_documento = $this->request->getData('nro_documento');
 
             $conn = ConnectionManager::get('default');
             $conn->begin();
 
-            foreach ($programaciones_id as $programacion_id) {
-                $programacion = $this->Programaciones->get($programacion_id);
+            foreach ($recibos_id as $programacion_id) {
+                $programacion = $this->Recibos->get($programacion_id);
                 $programacion->fecha_pago = $fecha_pago;
                 $programacion->nro_documento = $nro_documento;
                 $programacion->estado_id = 3;
                 
-                if (!$this->Programaciones->save($programacion)) {
+                if (!$this->Recibos->save($programacion)) {
                     $conn->rollback();
-                    $message = 'Las programaciones no fueron pagadas correctamente';
+                    $message = 'Las recibos no fueron pagadas correctamente';
                     break;
                 }
             }
             
             $code = 200;
-            $message = 'Las programaciones fueron pagadas correctamente';
+            $message = 'Las recibos fueron pagadas correctamente';
             $conn->commit();
         }
-        $this->set(compact('programaciones', 'code', 'message'));
-        $this->set('_serialize', ['programaciones', 'code', 'message']);
+        $this->set(compact('recibos', 'code', 'message'));
+        $this->set('_serialize', ['recibos', 'code', 'message']);
     }
     
     /**
@@ -255,24 +255,24 @@ class ProgramacionesController extends AppController
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
     public function saveMany() {
-        $programaciones = $this->Programaciones->newEntities($this->request->getData('programaciones'));
+        $recibos = $this->Recibos->newEntities($this->request->getData('recibos'));
         if ($this->request->is('post')) {
             $conn = ConnectionManager::get('default');
             $conn->begin();
-            foreach ($programaciones as $programacion) {
+            foreach ($recibos as $programacion) {
                 $programacion->fecha_registro = date('Y-m-d');
-                if (!$this->Programaciones->save($programacion)) {
+                if (!$this->Recibos->save($programacion)) {
                     $conn->rollback();
-                    $message = 'Las programaciones no fueron guardadas correctamente';
+                    $message = 'Las recibos no fueron guardadas correctamente';
                     break;
                 }
             }
             
             $code = 200;
-            $message = 'Las programaciones fueron guardadas correctamente';
+            $message = 'Las recibos fueron guardadas correctamente';
             $conn->commit();
         }
-        $this->set(compact('programaciones', 'code', 'message'));
-        $this->set('_serialize', ['programaciones', 'code', 'message']);
+        $this->set(compact('recibos', 'code', 'message'));
+        $this->set('_serialize', ['recibos', 'code', 'message']);
     }
 }
