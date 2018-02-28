@@ -62,12 +62,12 @@ class RecibosController extends AppController
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null) {
-        $programacion = $this->Recibos->get($id, [
+        $recibo = $this->Recibos->get($id, [
             'contain' => ['Servicios' => ['Tipos']]
         ]);
 
-        $this->set(compact('programacion'));
-        $this->set('_serialize', ['programacion']);
+        $this->set(compact('recibo'));
+        $this->set('_serialize', ['recibo']);
     }
 
     /**
