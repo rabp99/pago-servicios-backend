@@ -27,6 +27,9 @@ class RecibosController extends AppController
         $servicio_id = $this->request->getQuery('servicio_id');
         $estado_id = $this->request->getQuery('estado_id');
         $items_per_page = $this->request->getQuery('items_per_page');
+        $fecha_inicio = $this->request->getQuery('fecha_inicio');
+        $fecha_cierre = $this->request->getQuery('fecha_cierre');
+        $text = $this->request->getQuery('text');
         
         $this->paginate = [
             'limit' => $items_per_page
@@ -41,6 +44,16 @@ class RecibosController extends AppController
         
         if ($estado_id) {
             $query->where(['Recibos.estado_id' => $estado_id]);
+        }
+        
+        if ($fecha_inicio && $fecha_cierre) {
+            $query->where(function($exp) use ($fecha_inicio, $fecha_cierre) {
+                return $exp->between('fecha_vencimiento', $fecha_inicio, $fecha_cierre, 'date');
+            });
+        }
+        
+        if ($text) {
+            $query->where(['Servicios.detalle' => $text]);
         }
         
         $recibos = $this->paginate($query);
@@ -76,20 +89,20 @@ class RecibosController extends AppController
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
     public function add() {
-        $programacion = $this->Recibos->newEntity();
-        $programacion->fecha_registro = date('Y-m-d');
+        $recibo = $this->Recibos->newEntity();
+        $recibo->fecha_registro = date('Y-m-d');
         if ($this->request->is('post')) {
-            $programacion = $this->Recibos->patchEntity($programacion, $this->request->getData());
+            $recibo = $this->Recibos->patchEntity($recibo, $this->request->getData());
             
-            if ($this->Recibos->save($programacion)) {
+            if ($this->Recibos->save($recibo)) {
                 $code = 200;
-                $message = 'La recibo fue guardada correctamente';
+                $message = 'EL recibo fue guardado correctamente';
             } else {
-                $message = 'El recibo no fue guardada correctamente';
+                $message = 'El recibo no fue guardado correctamente';
             }
         }
-        $this->set(compact('programacion', 'code', 'message'));
-        $this->set('_serialize', ['programacion', 'code', 'message']);
+        $this->set(compact('recibo', 'code', 'message'));
+        $this->set('_serialize', ['recibo', 'code', 'message']);
     }
 
     /**
@@ -221,28 +234,28 @@ class RecibosController extends AppController
     
     public function pagarMany() {
         if ($this->request->is('post')) {
-            $recibos_id = $this->request->getData('recibos');
-            $fecha_pago = $this->request->getData('fecha_pago');
+            $recibos = $this->request->getData('recibos');
+            $fecha = $this->request->getData('fecha');
             $nro_documento = $this->request->getData('nro_documento');
-
+            
             $conn = ConnectionManager::get('default');
             $conn->begin();
 
-            foreach ($recibos_id as $programacion_id) {
-                $programacion = $this->Recibos->get($programacion_id);
-                $programacion->fecha_pago = $fecha_pago;
-                $programacion->nro_documento = $nro_documento;
-                $programacion->estado_id = 3;
+            foreach ($recibos as $recibo) {
+                $recibo = $this->Recibos->get($recibo['id']);
+                $recibo->fecha_pago = $fecha;
+                $recibo->nro_documento = $nro_documento;
+                $recibo->estado_id = 3;
                 
-                if (!$this->Recibos->save($programacion)) {
+                if (!$this->Recibos->save($recibo)) {
                     $conn->rollback();
-                    $message = 'Las recibos no fueron pagadas correctamente';
+                    $message = 'Los recibos no fueron pagados correctamente';
                     break;
                 }
             }
             
             $code = 200;
-            $message = 'Las recibos fueron pagadas correctamente';
+            $message = 'Los recibos fueron pagados correctamente';
             $conn->commit();
         }
         $this->set(compact('recibos', 'code', 'message'));
