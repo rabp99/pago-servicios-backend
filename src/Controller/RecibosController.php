@@ -15,7 +15,7 @@ class RecibosController extends AppController
 {
     public function initialize() {
         parent::initialize();
-        $this->Auth->allow(['getPendientesPago', 'showAlerts']);
+        $this->Auth->allow(['getPendientesPago', 'showAlerts', 'getEstadisticas']);
     }
 
     /**
@@ -263,7 +263,7 @@ class RecibosController extends AppController
     }
     
     /**
-     * Add method
+     * Save Many method
      *
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
@@ -287,5 +287,26 @@ class RecibosController extends AppController
         }
         $this->set(compact('recibos', 'code', 'message'));
         $this->set('_serialize', ['recibos', 'code', 'message']);
+    }
+    
+    /**
+     * Get Estadisticas method
+     *
+     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
+     */
+    public function getEstadisticas() {
+        $fecha_inicio = $this->request->getQuery('fecha_inicio');
+        $fecha_cierre = $this->request->getQuery('fecha_cierre');
+        
+        $totalCount = $this->Recibos->find()->where(['estado_id' => 4])->count();
+        $sinPagarCount = $this->Recibos->find()->where(['estado_id' => 4])->where(function($exp) use ($fecha_inicio, $fecha_cierre) {
+            return $exp->between('fecha_vencimiento', $fecha_inicio, $fecha_cierre, 'date');
+        })->count();
+        $pagadosCount = $this->Recibos->find()->where(['estado_id' => 3])->where(function($exp) use ($fecha_inicio, $fecha_cierre) {
+            return $exp->between('fecha_vencimiento', $fecha_inicio, $fecha_cierre, 'date');
+        })->count();
+        
+        $this->set(compact('totalCount', 'sinPagarCount', 'pagadosCount'));
+        $this->set('_serialize', ['totalCount', 'sinPagarCount', 'pagadosCount']);
     }
 }

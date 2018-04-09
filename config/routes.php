@@ -134,6 +134,10 @@ Router::scope('/', function ($routes) {
             'saveMany' => [
                 'action' => 'saveMany',
                 'method' => 'POST'
+            ],
+            'getEstadisticas' => [
+                'action' => 'getEstadisticas',
+                'method' => 'GET'
             ]
         ]
     ]);
