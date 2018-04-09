@@ -138,6 +138,10 @@ Router::scope('/', function ($routes) {
             'getEstadisticas' => [
                 'action' => 'getEstadisticas',
                 'method' => 'GET'
+            ],
+            'getChartBarData/:anio' => [
+                'action' => 'getChartBarData',
+                'method' => 'GET'
             ]
         ]
     ]);

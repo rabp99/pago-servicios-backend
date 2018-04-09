@@ -15,7 +15,7 @@ class RecibosController extends AppController
 {
     public function initialize() {
         parent::initialize();
-        $this->Auth->allow(['getPendientesPago', 'showAlerts', 'getEstadisticas']);
+        $this->Auth->allow(['getPendientesPago', 'showAlerts', 'getChartBarData']);
     }
 
     /**
@@ -308,5 +308,48 @@ class RecibosController extends AppController
         
         $this->set(compact('totalCount', 'sinPagarCount', 'pagadosCount'));
         $this->set('_serialize', ['totalCount', 'sinPagarCount', 'pagadosCount']);
+    }
+    
+        
+    /**
+     * Get Estadisticas method
+     *
+     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
+     */
+    public function getChartBarData() {
+        $anio = $this->request->getParam('anio');
+        $pagado_serie = [];
+        $deuda_serie = [];
+        
+        for ($i = 0; $i < 12; $i++) {
+            $query = $this->Recibos->find();
+            $mes = str_pad($i + 1, 2, '00', STR_PAD_LEFT);
+            $pagado = $query
+                ->select([
+                    'total' => $query->func()->sum('Recibos.monto')
+                ])
+                ->where(['Recibos.estado_id' => 3])
+                ->where(function($exp) use ($anio, $mes) {
+                    return $exp->between('fecha_vencimiento', "$anio-$mes-01", "$anio-$mes-31", 'date');
+                })->first();
+            array_push($pagado_serie, is_null($pagado->total) ? 0 : $pagado->total);
+        }
+        
+        for ($i = 0; $i < 12; $i++) {
+            $query = $this->Recibos->find();
+            $mes = str_pad($i + 1, 2, '00', STR_PAD_LEFT);
+            $deuda = $query
+                ->select([
+                    'total' => $query->func()->sum('Recibos.monto')
+                ])
+                ->where(['Recibos.estado_id' => 4])
+                ->where(function($exp) use ($anio, $mes) {
+                    return $exp->between('fecha_vencimiento', "$anio-$mes-01", "$anio-$mes-31", 'date');
+                })->first();
+            array_push($deuda_serie, is_null($deuda->total) ? 0 : $deuda->total);
+        }
+        
+        $this->set(compact('pagado_serie', 'deuda_serie'));
+        $this->set('_serialize', ['pagado_serie', 'deuda_serie']);
     }
 }
