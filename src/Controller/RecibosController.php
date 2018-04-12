@@ -56,6 +56,7 @@ class RecibosController extends AppController
             $query->where(['Servicios.detalle' => $text]);
         }
         
+        $count = $query->count();
         $recibos = $this->paginate($query);
         $paginate = $this->request->getParam('paging')['Recibos'];
         $pagination = [
@@ -63,8 +64,8 @@ class RecibosController extends AppController
             'itemsPerPage' =>  $paginate['perPage']
         ];
         
-        $this->set(compact('recibos', 'pagination'));
-        $this->set('_serialize', ['recibos', 'pagination']);
+        $this->set(compact('recibos', 'pagination', 'count'));
+        $this->set('_serialize', ['recibos', 'pagination', 'count']);
     }
 
     /**

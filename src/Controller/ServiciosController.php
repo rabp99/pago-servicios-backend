@@ -46,6 +46,7 @@ class ServiciosController extends AppController
             ]]);
         }
         
+        $count = $query->count();
         $servicios = $this->paginate($query);
         $paginate = $this->request->getParam('paging')['Servicios'];
         $pagination = [
@@ -53,8 +54,8 @@ class ServiciosController extends AppController
             'itemsPerPage' =>  $paginate['perPage']
         ];
         
-        $this->set(compact('servicios', 'pagination'));
-        $this->set('_serialize', ['servicios', 'pagination']);
+        $this->set(compact('servicios', 'pagination', 'count'));
+        $this->set('_serialize', ['servicios', 'pagination', 'count']);
     }
 
     /**
