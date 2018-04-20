@@ -43,12 +43,31 @@ class UsersController extends AppController
     }
     
     public function getAdmin() {
-        $users = $this->Users->find()
+        $text = $this->request->getQuery('text');
+        $items_per_page = $this->request->getQuery('items_per_page');
+        
+        $this->paginate = [
+            'limit' => $items_per_page
+        ];
+        
+        $query = $this->Users->find()
             ->where(['Users.Idestado' => 1])
             ->contain(['RolUsers.Roles']);
+
+        if ($text) {
+            $query->where(['Users.cPerUsuCodigo LIKE' => '%' . $text . '%']);
+        }
         
-        $this->set(compact('users'));
-        $this->set('_serialize', ['users']);
+        $count = $query->count();
+        $users = $this->paginate($query);
+        $paginate = $this->request->getParam('paging')['Users'];
+        $pagination = [
+            'totalItems' => $paginate['count'],
+            'itemsPerPage' =>  $paginate['perPage']
+        ];
+        
+        $this->set(compact('users', 'pagination', 'count'));
+        $this->set('_serialize', ['users', 'pagination', 'count']);
     }
     /**
      * View method

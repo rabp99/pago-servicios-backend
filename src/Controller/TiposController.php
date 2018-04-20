@@ -19,10 +19,29 @@ class TiposController extends AppController
      * @return \Cake\Http\Response|void
      */
     public function index() {
-        $tipos = $this->Tipos->find();
+        $estado_id = $this->request->getQuery('estado_id');
+        $items_per_page = $this->request->getQuery('items_per_page');
+        
+        $this->paginate = [
+            'limit' => $items_per_page
+        ];
+        
+        $query = $this->Tipos->find();
 
-        $this->set(compact('tipos'));
-        $this->set('_serialize', ['tipos']);
+        if ($estado_id) {
+            $query->where(['Tipos.estado_id' => $estado_id]);
+        }
+        
+        $count = $query->count();
+        $tipos = $this->paginate($query);
+        $paginate = $this->request->getParam('paging')['Tipos'];
+        $pagination = [
+            'totalItems' => $paginate['count'],
+            'itemsPerPage' =>  $paginate['perPage']
+        ];
+        
+        $this->set(compact('tipos', 'pagination', 'count'));
+        $this->set('_serialize', ['tipos', 'pagination', 'count']);
     }
 
     /**
@@ -55,9 +74,9 @@ class TiposController extends AppController
         
             if ($this->Tipos->save($tipo)) {
                 $code = 200;
-                $message = 'El tipo fue guardado correctamente';
+                $message = 'El tipo de servicio fue guardado correctamente';
             } else {
-                $message = 'El tipo no fue guardado correctamente';
+                $message = 'El tipo de servicio no fue guardado correctamente';
             }
         }
         $this->set(compact('tipo', 'code', 'message'));
