@@ -12,7 +12,10 @@ use App\Controller\AppController;
  */
 class TiposController extends AppController
 {
-
+    public function initialize() {
+        parent::initialize();
+        $this->Auth->allow(['getReporte']);
+    }
     /**
      * Index method
      *
@@ -127,5 +130,29 @@ class TiposController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+    
+    public function getReporte() {
+        $fecha_inicio = $this->request->param('fecha_inicio');
+        $fecha_cierre = $this->request->param('fecha_cierre');
+        $items_per_page = $this->request->getQuery('items_per_page');
+
+        $this->paginate = [
+            'limit' => $items_per_page
+        ];
+        
+        $query = $this->Tipos->find()
+            ->contain(['Servicios.Recibos']);
+        
+        $count = $query->count();
+        $tipos = $this->paginate($query);
+        $paginate = $this->request->getParam('paging')['Tipos'];
+        $pagination = [
+            'totalItems' => $paginate['count'],
+            'itemsPerPage' =>  $paginate['perPage']
+        ];
+        
+        $this->set(compact('tipos', 'pagination', 'count'));
+        $this->set('_serialize', ['tipos', 'pagination', 'count']);
     }
 }

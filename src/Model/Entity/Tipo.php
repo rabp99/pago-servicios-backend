@@ -2,6 +2,8 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\I18n\Number;
+use Cake\Utility\Hash;
 
 /**
  * Tipo Entity
@@ -27,4 +29,65 @@ class Tipo extends Entity
     protected $_accessible = [
         '*' => true
     ];
+    
+    protected $_virtual = ['countServicios', 'countRecibos', 'countRecibosPendientes', 'montoPendiente'];
+    
+    protected function _getCountServicios() {
+        if (isset($this->_properties['servicios'])) {
+            return sizeof($this->_properties['servicios']);
+        }
+        return 0;
+    }
+    
+    protected function _getCountRecibos() {
+        if (isset($this->_properties['servicios'])) {
+            $servicios = $this->_properties['servicios'];
+            $countRecibos = 0;
+            foreach ($servicios as $servicio) {
+                if ($servicio->recibos) {
+                    $countRecibos += sizeof($servicio->recibos);
+                }
+            }
+            return $countRecibos;
+        }
+        return 0;
+    }
+    
+    protected function _getCountRecibosPendientes() {
+        if (isset($this->_properties['servicios'])) {
+            $servicios = $this->_properties['servicios'];
+            $countRecibosPendientes = 0;
+            foreach ($servicios as $servicio) {
+                if ($servicio->recibos) {
+                    foreach ($servicio->recibos as $recibo) {
+                        if ($recibo->estado_id == 4) {
+                            $countRecibosPendientes += 1;
+                        }
+                    }
+                }
+            }
+            return $countRecibosPendientes;
+        }
+        return 0;
+    }
+    
+    protected function _getMontoPendiente() {
+        if (isset($this->_properties['servicios'])) {
+            $servicios = $this->_properties['servicios'];
+            $montoTotal = 0;
+            foreach ($servicios as $servicio) {
+                if ($servicio->recibos) {
+                    foreach ($servicio->recibos as $recibo) {
+                        $montoTotal += $recibo->monto;
+                    }
+                }
+            }
+            $montoTotal = Number::format($montoTotal, [
+                'places' => 2,
+                'before' => 'S/ '
+            ]);
+            return $montoTotal;
+        }
+        return 0;
+    }
 }

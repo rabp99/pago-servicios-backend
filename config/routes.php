@@ -145,11 +145,10 @@ Router::scope('/', function ($routes) {
             ]
         ]
     ]);
-    $routes->resources('tipos');
-    $routes->resources('pagos', [
+    $routes->resources('tipos', [
         'map' => [
-            'getByDates/:fecha_inicio/:fecha_cierre' => [
-                'action' => 'getByDates',
+            'getReporte/:fecha_inicio/:fecha_cierre' => [
+                'action' => 'getReporte',
                 'method' => 'GET'
             ]
         ]

@@ -39,6 +39,11 @@ class TiposTable extends Table
             'foreignKey' => 'estado_id',
             'joinType' => 'INNER'
         ]);
+        
+        $this->hasMany('Servicios', [
+            'foreignKey' => 'tipo_id'
+        ]);
+        
     }
 
     /**
