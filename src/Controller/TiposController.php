@@ -133,16 +133,21 @@ class TiposController extends AppController
     }
     
     public function getReporte() {
-        $fecha_inicio = $this->request->param('fecha_inicio');
-        $fecha_cierre = $this->request->param('fecha_cierre');
+        $fechaInicio = $this->request->getQuery('fechaInicio');
+        $fechaCierre = $this->request->getQuery('fechaCierre');
         $items_per_page = $this->request->getQuery('items_per_page');
-
         $this->paginate = [
             'limit' => $items_per_page
         ];
         
         $query = $this->Tipos->find()
-            ->contain(['Servicios.Recibos']);
+            ->contain(['Servicios' => [
+                'Recibos' => function($q) use ($fechaInicio, $fechaCierre) {
+                    return $q->where(function($exp) use ($fechaInicio, $fechaCierre) {
+                        return $exp->between('fecha_vencimiento', $fechaInicio, $fechaCierre, 'date');
+                    });
+                }
+            ]]);
         
         $count = $query->count();
         $tipos = $this->paginate($query);

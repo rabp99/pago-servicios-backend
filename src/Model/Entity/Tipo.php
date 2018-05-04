@@ -83,8 +83,7 @@ class Tipo extends Entity
                 }
             }
             $montoTotal = Number::format($montoTotal, [
-                'places' => 2,
-                'before' => 'S/ '
+                'places' => 2
             ]);
             return $montoTotal;
         }

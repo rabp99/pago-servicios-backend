@@ -147,7 +147,7 @@ Router::scope('/', function ($routes) {
     ]);
     $routes->resources('tipos', [
         'map' => [
-            'getReporte/:fecha_inicio/:fecha_cierre' => [
+            'getReporte' => [
                 'action' => 'getReporte',
                 'method' => 'GET'
             ]
