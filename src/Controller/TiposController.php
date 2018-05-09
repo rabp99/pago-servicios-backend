@@ -12,10 +12,6 @@ use App\Controller\AppController;
  */
 class TiposController extends AppController
 {
-    public function initialize() {
-        parent::initialize();
-        $this->Auth->allow(['getReporte']);
-    }
     /**
      * Index method
      *
@@ -147,7 +143,7 @@ class TiposController extends AppController
                         return $exp->between('fecha_vencimiento', $fechaInicio, $fechaCierre, 'date');
                     });
                 }
-            ]]);
+            ]])->where(['Tipos.estado_id' => 1]);
         
         $count = $query->count();
         $tipos = $this->paginate($query);

@@ -78,7 +78,9 @@ class Tipo extends Entity
             foreach ($servicios as $servicio) {
                 if ($servicio->recibos) {
                     foreach ($servicio->recibos as $recibo) {
-                        $montoTotal += $recibo->monto;
+                        if ($recibo->estado_id == 4) {
+                            $montoTotal += $recibo->monto;
+                        }
                     }
                 }
             }

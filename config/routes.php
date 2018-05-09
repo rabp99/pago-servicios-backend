@@ -87,8 +87,8 @@ Router::scope('/', function ($routes) {
                 'action' => 'getByTipo',
                 'method' => 'GET'
             ],
-            'getReport/:tipo_id' => [
-                'action' => 'getReport',
+            'getReporte/:tipo_id' => [
+                'action' => 'getReporte',
                 'method' => 'GET'
             ],
             'search/:texto' => [
@@ -145,7 +145,7 @@ Router::scope('/', function ($routes) {
             ]
         ]
     ]);
-    $routes->resources('tipos', [
+    $routes->resources('Tipos', [
         'map' => [
             'getReporte' => [
                 'action' => 'getReporte',

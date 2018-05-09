@@ -30,7 +30,7 @@ class Servicio extends Entity
         '*' => true
     ];
     
-    protected $_virtual = ['condicion', 'deuda_acumulada', 'descripcion_detallada'];
+    protected $_virtual = ['condicion', 'deuda_acumulada', 'descripcion_detallada', 'countRecibos', 'countRecibosPendientes', 'montoPendiente'];
     
     protected function _getCondicion() {
         $condicion = 'DEUDA';
@@ -59,5 +59,40 @@ class Servicio extends Entity
         }
         
         return $suma;
+    }
+    
+    protected function _getCountRecibos() {
+        if (!empty($this->_properties['recibos'])) {
+            return sizeof($this->_properties['recibos']);
+        }
+        return 0;
+    }
+    
+    protected function _getCountRecibosPendientes() {
+        if (!empty($this->_properties['recibos'])) {
+            $countRecibosPendientes = 0;
+            $recibos = $this->_properties['recibos'];
+            foreach ($recibos as $recibo) {
+                if ($recibo->estado_id == 4) {
+                    $countRecibosPendientes += 1;
+                }
+            }
+            return $countRecibosPendientes;
+        }
+        return 0;
+    }
+    
+    protected function _getMontoPendiente() {
+        if (!empty($this->_properties['recibos'])) {
+            $montoTotal = 0;
+            $recibos = $this->_properties['recibos'];
+            foreach ($recibos as $recibo) {
+                if ($recibo->estado_id == 4) {
+                    $montoTotal += $recibo->monto;
+                }
+            }
+            return $montoTotal;
+        }
+        return 0;
     }
 }

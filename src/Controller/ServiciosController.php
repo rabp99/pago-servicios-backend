@@ -12,7 +12,6 @@ use App\Controller\AppController;
  */
 class ServiciosController extends AppController
 {
-
     /**
      * Index method
      *
@@ -148,20 +147,34 @@ class ServiciosController extends AppController
         $this->set('_serialize', ['servicios']);
     }
     
-    public function getReport() {
+    public function getReporte() {
         $tipo_id = $this->request->getParam('tipo_id');
+        $fechaInicio = $this->request->getQuery('fechaInicio');
+        $fechaCierre = $this->request->getQuery('fechaCierre');
+        $items_per_page = $this->request->getQuery('items_per_page');
+        $this->paginate = [
+            'limit' => $items_per_page
+        ];
         
-        $servicios = $this->Servicios->find()
-            ->contain(['Tipos', 'Recibos' => function($q) {
-                return $q->where(['estado_id' => 4]);
-            }]);
+        $query = $this->Servicios->find()
+            ->contain([
+                'Recibos' => function($q) use ($fechaInicio, $fechaCierre) {
+                    return $q->where(function($exp) use ($fechaInicio, $fechaCierre) {
+                        return $exp->between('fecha_vencimiento', $fechaInicio, $fechaCierre, 'date');
+                    });
+                }
+            ])->where(['Servicios.tipo_id' => $tipo_id, 'Servicios.estado_id' => 1]);
         
-        if ($tipo_id != 0) {
-            $servicios->where(['tipo_id' => $tipo_id]);
-        }
+        $count = $query->count();
+        $servicios = $this->paginate($query);
+        $paginate = $this->request->getParam('paging')['Servicios'];
+        $pagination = [
+            'totalItems' => $paginate['count'],
+            'itemsPerPage' =>  $paginate['perPage']
+        ];
         
-        $this->set(compact('servicios'));
-        $this->set('_serialize', ['servicios']);
+        $this->set(compact('servicios', 'pagination', 'count'));
+        $this->set('_serialize', ['servicios', 'pagination', 'count']);
     }
     
     public function search($texto = null) {
