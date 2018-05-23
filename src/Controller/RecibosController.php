@@ -36,7 +36,7 @@ class RecibosController extends AppController
         ];
         
         $query = $this->Recibos->find()
-            ->contain(['Servicios' => ['Tipos']]);
+            ->contain(['Estados', 'Servicios' => ['Tipos']]);
 
         if ($servicio_id) {
             $query->where(['Recibos.servicio_id' => $servicio_id]);
