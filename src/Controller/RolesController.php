@@ -60,4 +60,16 @@ class RolesController extends AppController
         $this->set(compact('code', 'message'));
         $this->set('_serialize', ['code', 'message']);
     }
+    
+    /**
+     * Index method
+     *
+     * @return \Cake\Network\Response|null
+     */
+    public function getAdmin() {
+        $roles = $this->Roles->find()->where(['estado_id' => 1]);
+
+        $this->set(compact('roles'));
+        $this->set('_serialize', ['roles']);
+    }
 }

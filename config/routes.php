@@ -155,7 +155,14 @@ Router::scope('/', function ($routes) {
     ]);
     $routes->resources('Controllers');
     $routes->resources('RolUsers');
-    $routes->resources('Roles');
+    $routes->resources('Roles', [
+        'map' => [
+            'getAdmin' => [
+                'action' => 'getAdmin',
+                'method' => 'GET'
+            ]
+        ]
+    ]);
     $routes->resources('Users', [
         'map' => [
             'getPersonas' => [
