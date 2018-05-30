@@ -53,7 +53,10 @@ class RecibosController extends AppController
         }
         
         if ($text) {
-            $query->where(['Servicios.detalle' => $text]);
+            $query->where(['OR' =>  [
+                'Servicios.detalle' => $text,
+                'Recibos.nro_recibo' => $text,
+            ]]);
         }
         
         $count = $query->count();
