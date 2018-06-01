@@ -29,17 +29,19 @@ class MensajesShell extends Shell
             ->where(['Recibos.estado_id' => 4])
             ->contain(['Servicios']);
         
-        foreach ($recibos as $programacion) {
-            if ($programacion->fecha_limite->format('Y-m-d') <= date('Y-m-d')) {
-                exec('echo Advertencia  > tmp-' . $programacion->id . '-' . $username . '.txt');
-                exec('echo Servicio: ' . utf8_decode($programacion->servicio->descripcion) . ' >> tmp-' . $programacion->id . '-' . $username . '.txt');
-                exec('echo Detalle de Servicio: ' . $programacion->servicio->detalle . ' >> tmp-' . $programacion->id . '-' . $username . '.txt');
-                exec('echo Monto: ' . $programacion->monto . ' >> tmp-' . $programacion->id . '-' . $username . '.txt');
-                exec('echo Fecha de Vencimiento: ' . $programacion->fecha_vencimiento->format('Y-m-d') . ' >> tmp-' . $programacion->id . '-' . $username . '.txt');
-                exec('echo Revise el Sistema de Pago de Servicios  >> tmp-' . $programacion->id . '-' . $username . '.txt');
+        foreach ($recibos as $recibo) {
+            if ($recibo->fecha_limite->format('Y-m-d') <= date('Y-m-d')) {
+                if ($recibo->nro_recibo != null && $recibo->nro_recibo != 0) {
+                    exec('echo Advertencia  > tmp-' . $recibo->id . '-' . $username . '.txt');
+                    exec('echo Servicio: ' . utf8_decode($recibo->servicio->descripcion) . ' >> tmp-' . $recibo->id . '-' . $username . '.txt');
+                    exec('echo Detalle de Servicio: ' . $recibo->servicio->detalle . ' >> tmp-' . $recibo->id . '-' . $username . '.txt');
+                    exec('echo Monto: ' . $recibo->monto . ' >> tmp-' . $recibo->id . '-' . $username . '.txt');
+                    exec('echo Fecha de Vencimiento: ' . $recibo->fecha_vencimiento->format('Y-m-d') . ' >> tmp-' . $recibo->id . '-' . $username . '.txt');
+                    exec('echo Revise el Sistema de Pago de Servicios  >> tmp-' . $recibo->id . '-' . $username . '.txt');
 
-                exec('msg /SERVER:' . $ip. ' ' . $username . ' <tmp-' . $programacion->id . '-' . $username . '.txt');
-                exec('del tmp-' . $programacion->id . '-' . $username . '.txt');
+                    exec('msg /SERVER:' . $ip. ' ' . $username . ' <tmp-' . $recibo->id . '-' . $username . '.txt');
+                    exec('del tmp-' . $recibo->id . '-' . $username . '.txt');
+                }
             }
         }
     }
