@@ -1,1 +1,16 @@
-asdsa 
+comando usados:
+
+#construye el container a partir del docker-composer-yml
+docker-compose build
+
+#inicia el contenedor como servicio
+docker-compose up -d
+
+#detiene los servicios del contenedor
+docker-compose down
+
+#ingresa al bash para poder ejecutar comandos
+docker exec -it cakephp-app bash
+
+#verifica los logs de mysql
+docker logs cakephp-mysql
