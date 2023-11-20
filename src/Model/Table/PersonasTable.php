@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Table;
 
 use Cake\ORM\Query;
@@ -27,10 +28,11 @@ class PersonasTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config) {
+    public function initialize(array $config)
+    {
         parent::initialize($config);
 
-        $this->setTable(Configure::read('prefix_systram') . '.personal');
+        $this->setTable(Configure::read('prefix_systram') . '.people');
         $this->setDisplayField('Per_nom');
         $this->setPrimaryKey('PerCod');
     }
@@ -40,7 +42,8 @@ class PersonasTable extends Table
      *
      * @return string
      */
-    public static function defaultConnectionName() {
+    public static function defaultConnectionName()
+    {
         return 'systram_tmt';
     }
 }

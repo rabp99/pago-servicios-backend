@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -68,9 +69,9 @@ if (!env('APP_NAME') && file_exists(CONFIG . '.env')) {
  */
 try {
     Configure::write('CAKEPHP_DEBUG', getenv('CAKEPHP_DEBUG'));
-    Configure::write('prefix_systram', 'systram_tmt');
-    Configure::write('prefix_pago_servicios', 'pago_servicios');
-    
+    Configure::write('prefix_systram', 'db');
+    Configure::write('prefix_pago_servicios', 'db');
+
     Configure::config('default', new PhpConfig());
     Configure::load('app', 'default', false);
     if (Configure::read('CAKEPHP_DEBUG') == 2) {
@@ -227,6 +228,10 @@ Plugin::load('Cors', ['bootstrap' => true, 'routes' => false]);
 Plugin::load('ADmad/JwtAuth');
 
 use Cake\I18n\FrozenTime;
+
 FrozenTime::setJsonEncodeFormat('yyyy-MM-dd HH:mm:ss');
+
 use Cake\I18n\FrozenDate;
+
 FrozenDate::setJsonEncodeFormat('yyyy-MM-dd');
+Plugin::load('Migrations');

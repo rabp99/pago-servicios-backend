@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Controller\AppController;
@@ -14,7 +15,8 @@ use Firebase\JWT\JWT;
  */
 class UsersController extends AppController
 {
-    public function initialize() {
+    public function initialize()
+    {
         parent::initialize();
         $this->Auth->allow(['token']);
     }
@@ -23,33 +25,36 @@ class UsersController extends AppController
      *
      * @return \Cake\Network\Response|null
      */
-    public function index() {
+    public function index()
+    {
         $personas = $this->Personas->find()
             ->where(['Idestado' => 1]);
 
         $this->set(compact('personas'));
         $this->set('_serialize', ['personas']);
     }
-    
-    public function getPersonas() {
+
+    public function getPersonas()
+    {
         $users = $this->Users->find()
             ->where(['Users.Idestado' => 1])
             ->contain(['Personas'])->toArray();
-    
+
         $personas = Hash::extract($users, '{n}.persona');
-        
+
         $this->set(compact('personas'));
         $this->set('_serialize', ['personas']);
     }
-    
-    public function getAdmin() {
+
+    public function getAdmin()
+    {
         $text = $this->request->getQuery('text');
         $items_per_page = $this->request->getQuery('items_per_page');
-        
+
         $this->paginate = [
             'limit' => $items_per_page
         ];
-        
+
         $query = $this->Users->find()
             ->where(['Users.Idestado' => 1])
             ->contain(['RolUsers.Roles']);
@@ -57,7 +62,7 @@ class UsersController extends AppController
         if ($text) {
             $query->where(['Users.cPerUsuCodigo LIKE' => '%' . $text . '%']);
         }
-        
+
         $count = $query->count();
         $users = $this->paginate($query);
         $paginate = $this->request->getParam('paging')['Users'];
@@ -65,7 +70,7 @@ class UsersController extends AppController
             'totalItems' => $paginate['count'],
             'itemsPerPage' =>  $paginate['perPage']
         ];
-        
+
         $this->set(compact('users', 'pagination', 'count'));
         $this->set('_serialize', ['users', 'pagination', 'count']);
     }
@@ -76,7 +81,8 @@ class UsersController extends AppController
      * @return \Cake\Network\Response|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null) {
+    public function view($id = null)
+    {
         $user = $this->Users->get($id, [
             'contain' => ['Personas', 'RolUsers.Roles']
         ]);
@@ -129,24 +135,27 @@ class UsersController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
-    
-    public function token() {
+
+    public function token()
+    {
         $user = $this->Auth->identify();
         if (!$user) {
             throw new UnauthorizedException('Invalid username or password');
         }
-        $user = $this->Users->find()
-            ->where(['Users.PerCod' => $user['PerCod']])
-            ->contain(['RolUsers.Roles.ControllerRoles.Controllers', 'Personas'])
-            ->first();
+        $user = $this->Users->get($user["id"], [
+            "contain" => ['RolUsers.Roles.ControllerRoles.Controllers', 'Personas']
+        ]);
+
         $this->set([
             'success' => true,
             'user' => $user,
-            'token' => JWT::encode([
-                'sub' => $user['PerCod'],
-                'exp' =>  time() + 604800
-            ],
-            Security::salt()),
+            'token' => JWT::encode(
+                [
+                    'sub' => $user['id'],
+                    'exp' =>  time() + 604800
+                ],
+                Security::salt()
+            ),
             '_serialize' => ['success', 'user', 'token']
         ]);
     }

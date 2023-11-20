@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model\Table;
 
 use Cake\ORM\Query;
@@ -27,29 +28,21 @@ class UsersTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config) {
+    public function initialize(array $config)
+    {
         parent::initialize($config);
 
-        $this->setTable(Configure::read('prefix_systram') . '.usuarios');
-        $this->setDisplayField('cPerUsuCodigo');
-        $this->setPrimaryKey('PerCod');
-        
+        $this->setTable(Configure::read('prefix_systram') . '.users');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
+
         $this->belongsTo('Personas', [
             'foreignKey' => 'PerCod'
         ]);
-        
+
         $this->hasOne('RolUsers', [
             'foreignKey' => 'user_id',
             'joinType' => 'LEFT'
         ]);
-    }
-
-    /**
-     * Returns the database connection name to use by default.
-     *
-     * @return string
-     */
-    public static function defaultConnectionName() {
-        return 'systram_tmt';
     }
 }
